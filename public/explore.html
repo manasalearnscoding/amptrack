@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amptrack - Explore</title>
+    <link rel="stylesheet" href="/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="theme-toggle-container">
+        <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+    </div>
+    
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <a href="/dashboard.html" class="navbar-brand">
+            <span class="navbar-logo">🎵</span> Amptrack
+        </a>
+        <button class="navbar-mobile-toggle" onclick="toggleNav()">☰</button>
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a href="/dashboard.html" class="nav-link">Dashboard</a>
+            </li>
+            <li class="nav-item">
+                <a href="/profile.html" class="nav-link">My Concerts</a>
+            </li>
+            <li class="nav-item">
+                <a href="/explore.html" class="nav-link active">Explore</a>
+            </li>
+            <li class="nav-item user-dropdown" onclick="toggleUserMenu()">
+                <a href="#" class="nav-link">
+                    <span class="avatar" id="user-avatar">U</span>
+                    <span class="username" id="username">Username</span>
+                </a>
+                <div class="user-dropdown-menu">
+                    <a href="/account.html" class="dropdown-item">Account Settings</a>
+                    <div class="dropdown-divider"></div>
+                    <a href="#" class="dropdown-item" onclick="logout()">Logout</a>
+                </div>
+            </li>
+        </ul>
+    </nav>
+    
+    <!-- Breadcrumbs -->
+    <div class="breadcrumbs">
+        <span class="breadcrumb-item">
+            <a href="/dashboard.html">Home</a>
+        </span>
+        <span class="breadcrumb-item">Explore</span>
+    </div>
+    
+    <h1>Explore Concerts</h1>
+    
+    <!-- Search Section -->
+    <div class="search-container">
+        <h2>Find Upcoming Shows</h2>
+        <div class="search-form">
+            <input type="text" id="explore-search" placeholder="Search by artist, venue, or city">
+            <button onclick="exploreSearch()">Search</button>
+        </div>
+        <div id="explore-results"></div>
+    </div>
+    
+    <!-- Popular Shows -->
+    <h2>Popular Shows</h2>
+    <div class="dashboard-cards">
+        <div class="dashboard-card">
+            <div class="dashboard-card-icon">🎤</div>
+            <div class="dashboard-card-title">Taylor Swift</div>
+            <div class="dashboard-card-text">MetLife Stadium</div>
+        </div>
+        <div class="dashboard-card">
+            <div class="dashboard-card-icon">🎸</div>
+            <div class="dashboard-card-title">Arctic Monkeys</div>
+            <div class="dashboard-card-text">Hollywood Bowl</div>
+        </div>
+        <div class="dashboard-card">
+            <div class="dashboard-card-icon">🎧</div>
+            <div class="dashboard-card-title">Kendrick Lamar</div>
+            <div class="dashboard-card-text">O2 Arena</div>
+        </div>
+        <div class="dashboard-card">
+            <div class="dashboard-card-icon">🎹</div>
+            <div class="dashboard-card-title">Tame Impala</div>
+            <div class="dashboard-card-text">United Center</div>
+        </div>
+    </div>
+    
+    <script src="/script.js"></script>
+    <script>
+        // Explore search function
+        async function exploreSearch() {
+            const searchQuery = document.getElementById('explore-search').value;
+            if (!searchQuery.trim()) {
+                alert('Please enter a search term');
+                return;
+            }
+
+            try {
+                // Show loading indicator
+                const exploreResultsDiv = document.getElementById('explore-results');
+                exploreResultsDiv.innerHTML = '<p>Searching for concerts...</p>';
+
+                const apikey = 'BgK2HR1cbLZENtALUAakJ3mtrGJCGhNf';
+                const response = await fetch(`https://app.ticketmaster.com/discovery/v2/events.json?size=8&keyword=${encodeURIComponent(searchQuery)}&apikey=${apikey}`);
+                
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                
+                const data = await response.json();
+                displayExploreResults(data);
+            } catch (error) {
+                console.error('Error searching for concerts:', error);
+                const exploreResultsDiv = document.getElementById('explore-results');
+                exploreResultsDiv.innerHTML = '<p>Error searching for concerts. Please try again later.</p>';
+            }
+        }
+        
+        // Display explore search results
+        function displayExploreResults(data) {
+            const exploreResultsDiv = document.getElementById('explore-results');
+            exploreResultsDiv.innerHTML = '';
+
+            if (data._embedded && data._embedded.events) {
+                // Create a grid container for the results
+                const resultsGrid = document.createElement('div');
+                resultsGrid.className = 'dashboard-cards';
+                
+                data._embedded.events.forEach(event => {
+                    // Get venue info safely
+                    const venueName = event._embedded?.venues?.[0]?.name || 'Unknown Venue';
+                    const venueCity = event._embedded?.venues?.[0]?.city?.name || 'Unknown City';
+                    
+                    // Format the date nicely if available
+                    let formattedDate = event.dates?.start?.localDate || 'Unknown Date';
+                    if (formattedDate !== 'Unknown Date') {
+                        const dateObj = new Date(formattedDate);
+                        formattedDate = dateObj.toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric'
+                        });
+                    }
+                    
+                    const concertCard = document.createElement('div');
+                    concertCard.className = 'dashboard-card';
+                    
+                    concertCard.innerHTML = `
+                        <div class="dashboard-card-icon">🎵</div>
+                        <div class="dashboard-card-title">${event.name}</div>
+                        <div class="dashboard-card-text">${venueName}</div>
+                        <div class="dashboard-card-text">${venueCity} • ${formattedDate}</div>
+                        <button onclick="addConcert('${event.id}', '${event.name.replace(/'/g, "\\'")}', '${event.dates.start.localDate}')">Add to My Concerts</button>
+                    `;
+                    
+                    resultsGrid.appendChild(concertCard);
+                });
+                
+                exploreResultsDiv.appendChild(resultsGrid);
+            } else {
+                exploreResultsDiv.innerHTML = `<p>No concerts found for your search. Try different keywords.</p>`;
+            }
+        }
+        
+        // Add event listener for Enter key in search input
+        document.addEventListener('DOMContentLoaded', () => {
+            const exploreSearch = document.getElementById('explore-search');
+            if (exploreSearch) {
+                exploreSearch.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        exploreSearch();
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,50 +1,225 @@
-<!-- public/profile.html -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Amptrack - Profile</title>
-    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <h1>Welcome to Your Profile</h1>
-    <p>Search for concerts and add them to your profile!</p>
-
-    <!-- Concert Search Form -->
-    <div>
-        <label for="concert-search">Search for Concerts:</label>
-        <input type="text" id="concert-search" placeholder="Enter concert name or city">
-        <button onclick="searchConcerts()">Search</button>
+    <div class="theme-toggle-container">
+      <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
     </div>
+    
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <a href="/dashboard.html" class="navbar-brand">
+            <span class="navbar-logo">🎵</span> Amptrack
+        </a>
+        <button class="navbar-mobile-toggle" onclick="toggleNav()">☰</button>
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a href="/dashboard.html" class="nav-link">Dashboard</a>
+            </li>
+            <li class="nav-item">
+                <a href="/profile.html" class="nav-link active">My Concerts</a>
+            </li>
+            <li class="nav-item">
+                <a href="/explore.html" class="nav-link">Explore</a>
+            </li>
+            <li class="nav-item user-dropdown" onclick="toggleUserMenu()">
+                <a href="#" class="nav-link">
+                    <span class="avatar" id="user-avatar">U</span>
+                    <span class="username" id="username">Username</span>
+                </a>
+                <div class="user-dropdown-menu">
+                    <a href="/account.html" class="dropdown-item">Account Settings</a>
+                    <div class="dropdown-divider"></div>
+                    <a href="#" class="dropdown-item" onclick="logout()">Logout</a>
+                </div>
+            </li>
+        </ul>
+    </nav>
 
-    <div id="concert-results"></div>
+    <!-- Breadcrumbs -->
+    <div class="breadcrumbs">
+        <span class="breadcrumb-item">
+            <a href="/dashboard.html">Home</a>
+        </span>
+        <span class="breadcrumb-item">My Concerts</span>
+    </div>
+    
+    <!-- Concert Search Form -->
+    <div class="search-container">
+        <h2>Find Concerts</h2>
+        <div class="search-form">
+            <input type="text" id="concert-search" placeholder="Search by artist, venue, or city">
+            <button onclick="searchConcerts()">Search</button>
+        </div>
+        <div id="concert-results"></div>
+    </div>
 
     <!-- Display user concerts -->
     <h2>Your Concerts</h2>
     <div id="concert-list"></div>
 
     <!-- Add Concert Form -->
-    <h3>Add a Concert to Your Profile</h3>
-    <form id="add-concert-form">
-        <label for="concert-name">Concert Name:</label>
-        <input type="text" id="concert-name" required><br>
-        <label for="concert-date">Date:</label>
-        <input type="date" id="concert-date" required><br>
-        <label for="concert-section">Section:</label>
-        <input type="text" id="concert-section" required><br>
-        <label for="concert-price">Price Paid:</label>
-        <input type="number" id="concert-price" required><br>
-        <label for="concert-review">Review:</label>
-        <textarea id="concert-review"></textarea><br>
-        <label for="concert-id">Ticketmaster ID:</label>
-        <input type="text" id="concert-id" required><br>
-        <button type="submit">Add Concert</button>
-    </form>
-
-    <button onclick="logout()">Logout</button>
+    <div id="add-concert-form-container">
+        <h3>Add a Concert Manually</h3>
+        <form id="add-concert-form">
+            <label for="concert-name">Concert Name:</label>
+            <input type="text" id="concert-name" required>
+            
+            <label for="concert-date">Date:</label>
+            <input type="date" id="concert-date" required>
+            
+            <label for="concert-section">Section:</label>
+            <input type="text" id="concert-section" required>
+            
+            <label for="concert-price">Price Paid:</label>
+            <input type="number" id="concert-price" required>
+            
+            <label for="concert-review">Review:</label>
+            <textarea id="concert-review"></textarea>
+            
+            <label for="concert-id">Ticketmaster ID (optional):</label>
+            <input type="text" id="concert-id">
+            
+            <button type="submit">Add Concert</button>
+        </form>
+    </div>
 
     <script src="/script.js"></script>
+    <script>
+        // Theme toggle functionality
+        function toggleTheme() {
+            const body = document.body;
+            const themeToggle = document.querySelector('.theme-toggle');
+            
+            if (body.classList.contains('dark-mode')) {
+                body.classList.remove('dark-mode');
+                themeToggle.textContent = '🌙';
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.classList.add('dark-mode');
+                themeToggle.textContent = '☀️';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+        
+        // Toggle navbar on mobile
+        function toggleNav() {
+            const navbar = document.querySelector('.navbar');
+            navbar.classList.toggle('show');
+        }
+        
+        // Toggle user dropdown menu
+        function toggleUserMenu() {
+            const dropdown = document.querySelector('.user-dropdown');
+            dropdown.classList.toggle('show');
+            
+            // Close dropdown when clicking outside
+            if (dropdown.classList.contains('show')) {
+                document.addEventListener('click', function closeMenu(e) {
+                    if (!e.target.closest('.user-dropdown')) {
+                        dropdown.classList.remove('show');
+                        document.removeEventListener('click', closeMenu);
+                    }
+                });
+            }
+        }
+        
+        // Check for saved theme preference
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
+            const themeToggle = document.querySelector('.theme-toggle');
+            
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                themeToggle.textContent = '☀️';
+            }
+            
+            // Set username if available
+            const username = localStorage.getItem('username') || 'User';
+            document.getElementById('username').textContent = username;
+            
+            // Set avatar initial
+            document.getElementById('user-avatar').textContent = username.charAt(0).toUpperCase();
+            
+            // Fetch user concerts when page loads
+            loadUserConcerts();
+        });
+        
+        // Update displayConcertResults to match new styling
+        function displayConcertResults(data) {
+            const concertResultsDiv = document.getElementById('concert-results');
+            concertResultsDiv.innerHTML = '';
+
+            if (data._embedded && data._embedded.events) {
+                data._embedded.events.forEach(event => {
+                    const concertCard = document.createElement('div');
+                    concertCard.classList.add('concert-card');
+                    
+                    // Get venue info safely
+                    const venueName = event._embedded?.venues?.[0]?.name || 'Unknown Venue';
+                    const venueCity = event._embedded?.venues?.[0]?.city?.name || 'Unknown City';
+                    
+                    concertCard.innerHTML = `
+                        <h3>${event.name}</h3>
+                        <p>Date: ${event.dates.start.localDate}</p>
+                        <p>Venue: ${venueName}</p>
+                        <p>Location: ${venueCity}</p>
+                        <button onclick="addConcert('${event.id}', '${event.name.replace(/'/g, "\\'")}', '${event.dates.start.localDate}')">Add to My Concerts</button>
+                    `;
+                    concertResultsDiv.appendChild(concertCard);
+                });
+            } else {
+                concertResultsDiv.innerHTML = `<p>No concerts found</p>`;
+            }
+        }
+        
+        // Update the function that displays user concerts
+        function loadUserConcerts() {
+            fetch('/concerts/mine')
+                .then(response => response.json())
+                .then(concerts => {
+                    const concertListDiv = document.getElementById('concert-list');
+                    concertListDiv.innerHTML = '';
+
+                    if (concerts.length === 0) {
+                        concertListDiv.innerHTML = '<p>You haven\'t added any concerts yet. Search for concerts above or add one manually.</p>';
+                        return;
+                    }
+
+                    concerts.forEach(concert => {
+                        const concertItem = document.createElement('div');
+                        concertItem.classList.add('concert-item');
+                        
+                        // Format the date nicely
+                        const concertDate = new Date(concert.date);
+                        const formattedDate = concertDate.toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric'
+                        });
+                        
+                        concertItem.innerHTML = `
+                            <h3>${concert.name}</h3>
+                            <p><span class="star-rating">★</span> </p>
+                            <p>Date: ${formattedDate}</p>
+                            <p>Section: ${concert.section}</p>
+                            <p>Price: $${concert.price}</p>
+                            ${concert.review ? `<p>Review: ${concert.review}</p>` : ''}
+                            <button onclick="deleteConcert('${concert._id}')">Delete</button>
+                        `;
+                        concertListDiv.appendChild(concertItem);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error loading concerts:', error);
+                });
+        }
+    </script>
 </body>
 </html>

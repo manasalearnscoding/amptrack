@@ -2,24 +2,27 @@
 <html>
 <head>
   <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
-  <title>Amptrack - Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Amptrack - Your Concert Tracker</title>
+  <script>
+    // Auto-set test user values in localStorage
+    window.onload = function() {
+      // Set test user ID
+      localStorage.setItem('userId', 'test-user-1234');
+      
+      // Set test username
+      localStorage.setItem('username', 'TestUser');
+      
+      // Redirect to dashboard
+      window.location.href = '/dashboard.html';
+    };
+  </script>
 </head>
 <body>
-  <h1>Welcome to Amptrack</h1>
-
-  <h2>Register</h2>
-  <form action="/auth/register" method="POST">
-    <input name="username" placeholder="Username">
-    <input name="password" type="password" placeholder="Password">
-    <button>Register</button>
-  </form>
-
-  <h2>Login</h2>
-  <form action="/auth/login" method="POST">
-    <input name="username" placeholder="Username">
-    <input name="password" type="password" placeholder="Password">
-    <button>Login</button>
-  </form>
+  <div class="auth-container">
+    <h1>Amptrack</h1>
+    <p>Redirecting to dashboard for testing...</p>
+  </div>
 </body>
 </html>

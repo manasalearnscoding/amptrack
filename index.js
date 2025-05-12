@@ -1,7 +1,7 @@
 // index.js
 const express = require('express');
-const mongoose = require('mongoose');
 const session = require('express-session');
+const cookieParser = require('cookie-parser');
 const path = require('path');
 require('dotenv').config();
 
@@ -14,25 +14,36 @@ const PORT = process.env.PORT || 3000;
 // --- Middleware ---
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(session({
-  secret: 'amptrack_secret', // You can store this in .env as SESSION_SECRET
+  secret: process.env.SESSION_SECRET || 'amptrack_secret',
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
+  cookie: { 
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  }
 }));
 
 // --- Routes ---
-app.use('/auth', authRoutes);         // Handles /auth/register, /auth/login etc.
-app.use('/concerts', concertRoutes);  // Handles /concerts/search etc.
+app.use('/auth', authRoutes);
+app.use('/concerts', concertRoutes);
 
-// --- MongoDB Connection ---
-mongoose.connect(process.env.MONGO_URI , {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-}).then(() => {
-  console.log('✅ MongoDB connected');
-  app.listen(PORT, () => console.log(`🚀 Server running at http://localhost:${PORT}`));
-}).catch(err => {
-  console.error('❌ MongoDB connection error:', err);
+// Catch-all route for client-side routing
+app.get('*', (req, res) => {
+  // Check if request is for a file (has extension)
+  const requestedPath = req.path;
+  if (path.extname(requestedPath) === '') {
+    // If no extension, serve index.html for client-side routing
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  } else {
+    // 404 if file not found
+    res.status(404).send('File not found');
+  }
 });
+
+// --- Start server without MongoDB connection ---
+console.log('✅ Starting in test mode (no MongoDB connection)');
+app.listen(PORT, () => console.log(`🚀 Server running at http://localhost:${PORT}`));

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amptrack - Dashboard</title>
+    <link rel="stylesheet" href="/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="theme-toggle-container">
+        <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+    </div>
+    
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <a href="/dashboard.html" class="navbar-brand">
+            <span class="navbar-logo">🎵</span> Amptrack
+        </a>
+        <button class="navbar-mobile-toggle" onclick="toggleNav()">☰</button>
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a href="/dashboard.html" class="nav-link active">Dashboard</a>
+            </li>
+            <li class="nav-item">
+                <a href="/profile.html" class="nav-link">My Concerts</a>
+            </li>
+            <li class="nav-item">
+                <a href="/explore.html" class="nav-link">Explore</a>
+            </li>
+            <li class="nav-item user-dropdown" onclick="toggleUserMenu()">
+                <a href="#" class="nav-link">
+                    <span class="avatar" id="user-avatar">U</span>
+                    <span class="username" id="username">Username</span>
+                </a>
+                <div class="user-dropdown-menu">
+                    <a href="/account.html" class="dropdown-item">Account Settings</a>
+                    <div class="dropdown-divider"></div>
+                    <a href="#" class="dropdown-item" onclick="logout()">Logout</a>
+                </div>
+            </li>
+        </ul>
+    </nav>
+    
+    <!-- Breadcrumbs -->
+    <div class="breadcrumbs">
+        <span class="breadcrumb-item">
+            <a href="/dashboard.html">Home</a>
+        </span>
+        <span class="breadcrumb-item">Dashboard</span>
+    </div>
+    
+    <!-- Dashboard Content -->
+    <div class="dashboard">
+        <div class="dashboard-header">
+            <h1 class="dashboard-title">Welcome, <span id="welcome-username">User</span>!</h1>
+            <p class="dashboard-subtitle">Your concert journey at a glance</p>
+        </div>
+        
+        <!-- Stats Section -->
+        <div class="stats-container">
+            <h2>Your Concert Stats</h2>
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-value" id="total-concerts">0</div>
+                    <div class="stat-label">Total Concerts</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="this-year">0</div>
+                    <div class="stat-label">This Year</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="avg-price">$0</div>
+                    <div class="stat-label">Avg. Price</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="top-venue">-</div>
+                    <div class="stat-label">Top Venue</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Quick Actions -->
+        <h2>Quick Actions</h2>
+        <div class="dashboard-cards">
+            <a href="/profile.html" class="dashboard-card">
+                <div class="dashboard-card-icon">🎸</div>
+                <div class="dashboard-card-title">My Concerts</div>
+                <div class="dashboard-card-text">View and manage all your concerts</div>
+            </a>
+            <a href="/profile.html#add-concert-form-container" class="dashboard-card">
+                <div class="dashboard-card-icon">➕</div>
+                <div class="dashboard-card-title">Add Concert</div>
+                <div class="dashboard-card-text">Add a new concert to your collection</div>
+            </a>
+            <a href="/explore.html" class="dashboard-card">
+                <div class="dashboard-card-icon">🔍</div>
+                <div class="dashboard-card-title">Explore</div>
+                <div class="dashboard-card-text">Discover new concerts and events</div>
+            </a>
+            <a href="/friends.html" class="dashboard-card">
+                <div class="dashboard-card-icon">👥</div>
+                <div class="dashboard-card-title">Friends</div>
+                <div class="dashboard-card-text">Connect with other concert-goers</div>
+            </a>
+        </div>
+        
+        <!-- Recent Activity -->
+        <h2>Recent Activity</h2>
+        <div id="recent-activity">
+            <p>Loading your recent activity...</p>
+        </div>
+    </div>
+    
+    <script>
+        // Toggle navbar on mobile
+        function toggleNav() {
+            const navbar = document.querySelector('.navbar');
+            navbar.classList.toggle('show');
+        }
+        
+        // Toggle user dropdown menu
+        function toggleUserMenu() {
+            const dropdown = document.querySelector('.user-dropdown');
+            dropdown.classList.toggle('show');
+            
+            // Close dropdown when clicking outside
+            if (dropdown.classList.contains('show')) {
+                document.addEventListener('click', function closeMenu(e) {
+                    if (!e.target.closest('.user-dropdown')) {
+                        dropdown.classList.remove('show');
+                        document.removeEventListener('click', closeMenu);
+                    }
+                });
+            }
+        }
+        
+        // Toggle theme functionality
+        function toggleTheme() {
+            const body = document.body;
+            const themeToggle = document.querySelector('.theme-toggle');
+            
+            if (body.classList.contains('dark-mode')) {
+                body.classList.remove('dark-mode');
+                themeToggle.textContent = '🌙';
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.classList.add('dark-mode');
+                themeToggle.textContent = '☀️';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+        
+        // Load user data and stats
+        async function loadUserData() {
+            try {
+                // Get username from localStorage or session
+                const userId = localStorage.getItem('userId');
+                let username = localStorage.getItem('username');
+                
+                if (!userId) {
+                    // Redirect to login if no user ID
+                    window.location.href = '/index.html';
+                    return;
+                }
+                
+                // Set default username if not found
+                if (!username) {
+                    username = 'User';
+                    // You could fetch the actual username from server here
+                }
+                
+                // Update username displays
+                document.getElementById('username').textContent = username;
+                document.getElementById('welcome-username').textContent = username;
+                
+                // Set avatar initial
+                document.getElementById('user-avatar').textContent = username.charAt(0).toUpperCase();
+                
+                // Load concert stats
+                await loadConcertStats();
+                
+                // Load recent activity
+                await loadRecentActivity();
+                
+            } catch (error) {
+                console.error('Error loading user data:', error);
+            }
+        }
+        
+        // Load concert statistics
+        async function loadConcertStats() {
+            try {
+                // Fetch user's concerts
+                const response = await fetch('/concerts/mine');
+                const concerts = await response.json();
+                
+                // Calculate stats
+                const totalConcerts = concerts.length;
+                document.getElementById('total-concerts').textContent = totalConcerts;
+                
+                // Concerts this year
+                const currentYear = new Date().getFullYear();
+                const concertsThisYear = concerts.filter(concert => {
+                    const concertDate = new Date(concert.date);
+                    return concertDate.getFullYear() === currentYear;
+                }).length;
+                document.getElementById('this-year').textContent = concertsThisYear;
+                
+                // Average price
+                if (totalConcerts > 0) {
+                    const totalPrice = concerts.reduce((sum, concert) => sum + Number(concert.price), 0);
+                    const avgPrice = (totalPrice / totalConcerts).toFixed(0);
+                    document.getElementById('avg-price').textContent = `$${avgPrice}`;
+                }
+                
+                // Top venue (basic implementation)
+                if (totalConcerts > 0) {
+                    // Get section as proxy for venue (update this if you add venue field)
+                    const sections = concerts.map(concert => concert.section);
+                    const sectionCounts = {};
+                    
+                    sections.forEach(section => {
+                        sectionCounts[section] = (sectionCounts[section] || 0) + 1;
+                    });
+                    
+                    let topSection = '';
+                    let maxCount = 0;
+                    
+                    for (const section in sectionCounts) {
+                        if (sectionCounts[section] > maxCount) {
+                            topSection = section;
+                            maxCount = sectionCounts[section];
+                        }
+                    }
+                    
+                    document.getElementById('top-venue').textContent = topSection || '-';
+                }
+                
+            } catch (error) {
+                console.error('Error loading concert stats:', error);
+            }
+        }
+        
+        // Load recent activity
+        async function loadRecentActivity() {
+            try {
+                // Fetch user's concerts
+                const response = await fetch('/concerts/mine');
+                const concerts = await response.json();
+                
+                const activityContainer = document.getElementById('recent-activity');
+                
+                if (concerts.length === 0) {
+                    activityContainer.innerHTML = '<p>No activity yet. Start by adding your first concert!</p>';
+                    return;
+                }
+                
+                // Sort concerts by date (most recent first)
+                concerts.sort((a, b) => new Date(b.date) - new Date(a.date));
+                
+                // Display the 5 most recent concerts
+                const recentConcerts = concerts.slice(0, 5);
+                
+                let activityHtml = '';
+                
+                recentConcerts.forEach(concert => {
+                    // Format the date nicely
+                    const concertDate = new Date(concert.date);
+                    const formattedDate = concertDate.toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric'
+                    });
+                    
+                    activityHtml += `
+                        <div class="concert-card">
+                            <h3>${concert.name}</h3>
+                            <p><span class="star-rating">★</span> </p>
+                            <p>Date: ${formattedDate}</p>
+                            <p>Section: ${concert.section}</p>
+                            <p>Price: $${concert.price}</p>
+                            ${concert.review ? `<p>Review: ${concert.review}</p>` : ''}
+                        </div>
+                    `;
+                });
+                
+                activityContainer.innerHTML = activityHtml;
+                
+            } catch (error) {
+                console.error('Error loading recent activity:', error);
+                document.getElementById('recent-activity').innerHTML = '<p>Error loading activity. Please try again.</p>';
+            }
+        }
+        
+        // Function to handle logout
+        function logout() {
+            localStorage.removeItem('userId');
+            localStorage.removeItem('username');
+            window.location.href = '/index.html';
+        }
+        
+        // Load user data on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check for saved theme preference
+            const savedTheme = localStorage.getItem('theme');
+            const themeToggle = document.querySelector('.theme-toggle');
+            
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                themeToggle.textContent = '☀️';
+            }
+            
+            // Load user data
+            loadUserData();
+        });
+    </script>
+</body>
+</html>

@@ -1,17 +1,29 @@
 {
     "name": "amptrack",
     "version": "1.0.0",
+    "description": "A concert tracking application",
     "main": "index.js",
     "scripts": {
-        "start": "node index.js"
+        "start": "node index.js",
+        "dev": "nodemon index.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
     },
+    "keywords": [
+        "concerts",
+        "music",
+        "tracking"
+    ],
+    "author": "",
+    "license": "ISC",
     "dependencies": {
-        "axios": "^1.6.0",
-        "dotenv": "^16.5.0",
-        "ejs": "^3.1.8",
-        "express": "^4.21.2",
-        "express-session": "^1.18.1",
-        "mongoose": "^7.8.7",
-        "node-fetch": "^3.3.2"
+        "cookie-parser": "^1.4.7",
+        "dotenv": "^16.3.1",
+        "express": "^4.18.2",
+        "express-session": "^1.17.3",
+        "mongodb": "^6.3.0",
+        "mongoose": "^8.0.1"
+    },
+    "devDependencies": {
+        "nodemon": "^3.0.1"
     }
 }
