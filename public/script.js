@@ -3,9 +3,11 @@
 // Function to search for concerts using the Ticketmaster API
 async function searchConcerts() {
   const searchQuery = document.getElementById('concert-search').value;
-  const response = await fetch(`/api/search-concerts?keyword=${searchQuery}`);
-  const data = await response.json();
+  const apikey = 'BgK2HR1cbLZENtALUAakJ3mtrGJCGhNf';
 
+  const response = await fetch(`https://app.ticketmaster.com/discovery/v2/events.json?size=1&keyword=${encodeURIComponent(searchQuery)}&apikey=${apikey}`);
+  const data = await response.json();
+  console.log(data);
   displayConcertResults(data);
 }
 
@@ -105,5 +107,5 @@ loadUserConcerts();
 // Function to handle logout
 function logout() {
   localStorage.removeItem('userId'); // Assuming you're storing user ID in localStorage for simplicity
-  window.location.href = '/login.html'; // Redirect to login page
+  window.location.href = '/index.html'; // Redirect to login page
 }
