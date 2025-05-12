@@ -1,25 +1,139 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="styles.css">
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
   <title>Amptrack - Login</title>
 </head>
 <body>
-  <h1>Welcome to Amptrack</h1>
-
-  <h2>Register</h2>
-  <form action="/auth/register" method="POST">
-    <input name="username" placeholder="Username">
-    <input name="password" type="password" placeholder="Password">
-    <button>Register</button>
-  </form>
-
-  <h2>Login</h2>
-  <form action="/auth/login" method="POST">
-    <input name="username" placeholder="Username">
-    <input name="password" type="password" placeholder="Password">
-    <button>Login</button>
-  </form>
+  <div class="login-container">
+    <h1>Welcome to Amptrack</h1>
+    <p>Track your concert experiences and discover new shows</p>
+    <div id="message-container"></div>
+    <div class="auth-forms">
+      <div class="form-container">
+        <h2>Register</h2>
+        <form id="register-form">
+          <input name="username" placeholder="Username" required>
+          <input name="password" type="password" placeholder="Password" required>
+          <button type="submit">Register</button>
+        </form>
+      </div>
+      <div class="form-container">
+        <h2>Login</h2>
+        <form id="login-form">
+          <input name="username" placeholder="Username" required>
+          <input name="password" type="password" placeholder="Password" required>
+          <button type="submit">Login</button>
+        </form>
+      </div>
+    </div>
+    
+    <div class="test-mode-link">
+      <p><a href="/test">Enter Test Mode (No Login Required)</a></p>
+    </div>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Check if user is already logged in
+      const userId = localStorage.getItem('userId');
+      if (userId && userId !== 'test-user-123') {
+        // Redirect to profile page
+        window.location.href = '/profile.html';
+        return;
+      }
+      
+      // Function to show messages
+      function showMessage(message, isError = false) {
+        const messageContainer = document.getElementById('message-container');
+        messageContainer.innerHTML = '';
+        
+        const messageElement = document.createElement('div');
+        messageElement.className = isError ? 'error-message' : 'success-message';
+        messageElement.textContent = message;
+        
+        messageContainer.appendChild(messageElement);
+        
+        // Clear message after 5 seconds
+        setTimeout(() => {
+          messageContainer.innerHTML = '';
+        }, 5000);
+      }
+      
+      // Handle register form submission
+      document.getElementById('register-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        
+        const username = this.querySelector('input[name="username"]').value;
+        const password = this.querySelector('input[name="password"]').value;
+        
+        fetch('/auth/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ username, password }),
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.error) {
+            showMessage(data.error, true);
+          } else {
+            // Save userId to localStorage
+            localStorage.setItem('userId', data.userId);
+            
+            // Show success message
+            showMessage('Registration successful! Redirecting to profile...', false);
+            
+            // Redirect to profile page after a short delay
+            setTimeout(() => {
+              window.location.href = '/profile.html';
+            }, 1500);
+          }
+        })
+        .catch(error => {
+          console.error('Registration error:', error);
+          showMessage('An error occurred during registration. Please try again.', true);
+        });
+      });
+      
+      // Handle login form submission
+      document.getElementById('login-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        
+        const username = this.querySelector('input[name="username"]').value;
+        const password = this.querySelector('input[name="password"]').value;
+        
+        fetch('/auth/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ username, password }),
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.error) {
+            showMessage(data.error, true);
+          } else {
+            // Save userId to localStorage
+            localStorage.setItem('userId', data.userId);
+            
+            // Show success message
+            showMessage('Login successful! Redirecting to profile...', false);
+            
+            // Redirect to profile page after a short delay
+            setTimeout(() => {
+              window.location.href = '/profile.html';
+            }, 1500);
+          }
+        })
+        .catch(error => {
+          console.error('Login error:', error);
+          showMessage('An error occurred during login. Please try again.', true);
+        });
+      });
+    });
+  </script>
 </body>
 </html>
