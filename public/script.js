@@ -24,7 +24,7 @@ async function searchConcerts() {
   resultsDiv.innerHTML = '<p>Searching for concerts...</p>';
   
   try {
-    const apikey = 'BgK2HR1cbLZENtAUAakJ3mtrGJCGhNf';
+    const apikey = 'BgK2HR1cbLZENtALUAakJ3mtrGJCGhNf';
     const response = await fetch(`https://app.ticketmaster.com/discovery/v2/events.json?size=10&keyword=${encodeURIComponent(searchQuery)}&apikey=${apikey}`);
     const data = await response.json();
     console.log('API Response:', data);
