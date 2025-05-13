@@ -1,17 +1,12 @@
-// // db.js
-// const { MongoClient } = require('mongodb');
+// db.js
+require('dotenv').config();
+const mongoose = require('mongoose');
 
-// const client = new MongoClient(process.env.MONGO_URI);
+const uri = process.env.MONGO_URI;
 
-// let db;
-
-// async function connectToDb() {
-//   await client.connect();
-//   db = client.db('amptrack');
-// }
-
-// function getDb() {
-//   return db;
-// }
-
-// module.exports = { connectToDb, getDb };
+mongoose.connect(uri, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+.then(() => console.log('Connected to MongoDB'))
+.catch((err) => console.error('MongoDB connection error:', err));
