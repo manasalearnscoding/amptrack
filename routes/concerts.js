@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Concert = require('../models/Concert'); 
-const User = require('../models/User'); // <-- Add this
+const User = require('../models/User'); 
 const { ObjectId } = require('mongodb');
 
 // Add a concert
@@ -9,7 +9,7 @@ router.post('/add', async (req, res) => {
   try {
     console.log('Received concert data:', req.body);
 
-    const { username, ticketmasterId, name, date, section, price, review } = req.body;
+    const { username, ticketmasterId, name, date, venue, price, review } = req.body;
 
     if (!username) {
       console.error('Missing username');
@@ -26,7 +26,7 @@ router.post('/add', async (req, res) => {
       ticketmasterId,
       name,
       date,
-      section,
+      venue,
       price: parseFloat(price) || 0,
       review
     });

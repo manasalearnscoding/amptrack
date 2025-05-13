@@ -1,25 +1,59 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
   <title>Amptrack - Login</title>
 </head>
 <body>
-  <h1>Welcome to Amptrack</h1>
+  <div class="auth-container">
+    <header class="auth-header">
+      <h1 class="logo">AMPTRACK</h1>
+      <p class="tagline">Track your concert experiences</p>
+    </header>
 
-  <h2>Register</h2>
-  <form action="/auth/register" method="POST">
-    <input name="username" placeholder="Username">
-    <input name="password" type="password" placeholder="Password">
-    <button>Register</button>
-  </form>
+    <div class="auth-message" id="auth-message"></div>
 
-  <h2>Login</h2>
-  <form action="/auth/login" method="POST">
-    <input name="username" placeholder="Username">
-    <input name="password" type="password" placeholder="Password">
-    <button>Login</button>
-  </form>
+    <div class="auth-forms">
+      <div class="auth-form" id="login-form-container">
+        <h2>Login</h2>
+        <form action="/auth/login" method="POST" id="login-form">
+          <div class="form-group">
+            <label for="login-username">Username</label>
+            <input id="login-username" name="username" placeholder="Enter your username" required>
+          </div>
+          <div class="form-group">
+            <label for="login-password">Password</label>
+            <input id="login-password" name="password" type="password" placeholder="Enter your password" required>
+          </div>
+          <button type="submit" class="btn-primary">Log In</button>
+        </form>
+        <p class="form-footer">Don't have an account? <a href="#" id="show-register">Sign up</a></p>
+      </div>
+
+      <div class="auth-form" id="register-form-container" style="display: none;">
+        <h2>Register</h2>
+        <form action="/auth/register" method="POST" id="register-form">
+          <div class="form-group">
+            <label for="register-username">Username</label>
+            <input id="register-username" name="username" placeholder="Choose a username" required>
+          </div>
+          <div class="form-group">
+            <label for="register-password">Password</label>
+            <input id="register-password" name="password" type="password" placeholder="Create a password" required>
+          </div>
+          <button type="submit" class="btn-primary">Register</button>
+        </form>
+        <p class="form-footer">Already have an account? <a href="#" id="show-login">Log in</a></p>
+      </div>
+    </div>
+
+    <footer class="auth-footer">
+      <p>© 2025 Amptrack - All your concert memories in one place</p>
+    </footer>
+  </div>
+
+  <script src="/login.js"></script>
 </body>
 </html>

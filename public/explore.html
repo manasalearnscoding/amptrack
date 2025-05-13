@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amptrack - Explore</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Navigation header -->
+        <header class="app-header">
+            <h1 class="logo">AMPTRACK</h1>
+            <nav class="main-nav">
+                <a href="/dashboard.html" class="nav-item">Dashboard</a>
+                <a href="/concerts.html" class="nav-item">My Concerts</a>
+                <a href="/explore.html" class="nav-item active">Explore</a>
+                <a href="/add-concert.html" class="nav-item">Add Concert</a>
+            </nav>
+            <div class="user-profile">
+                <button class="profile-icon" id="profile-button">
+                    <span class="avatar-placeholder"></span>
+                </button>
+                <div class="user-menu" id="user-menu">
+                    <div class="user-info">
+                        <span id="username-display">User</span>
+                    </div>
+                    <div class="theme-toggle">
+                        <span>Theme:</span>
+                        <button id="light-mode" class="theme-btn">Light</button>
+                        <button id="dark-mode" class="theme-btn active">Dark</button>
+                    </div>
+                    <a href="#" id="logout-button" class="menu-item">Log out</a>
+                </div>
+            </div>
+        </header>
+
+        <main class="app-content">
+            <!-- Search Section -->
+            <section class="content-section" id="explore-search-section">
+                <h2 class="section-title">Find Upcoming Shows</h2>
+                <div class="search-box">
+                    <input type="text" id="explore-search" placeholder="Search by artist, venue, or city">
+                    <button id="explore-search-button" class="btn-primary">Search</button>
+                </div>
+            </section>
+
+            <!-- Popular Shows Section -->
+            <section class="content-section" id="popular-shows-section">
+                <h2 class="section-title">Popular Shows</h2>
+                <div class="popular-shows-grid">
+                    <div class="popular-show-card" data-artist="Taylor Swift">
+                        <div class="show-icon">🎤</div>
+                        <h3>Taylor Swift</h3>
+                        <p>MetLife Stadium</p>
+                    </div>
+                    <div class="popular-show-card" data-artist="Arctic Monkeys">
+                        <div class="show-icon">🎸</div>
+                        <h3>Arctic Monkeys</h3>
+                        <p>Hollywood Bowl</p>
+                    </div>
+                    <div class="popular-show-card" data-artist="Kendrick Lamar">
+                        <div class="show-icon">🎧</div>
+                        <h3>Kendrick Lamar</h3>
+                        <p>O2 Arena</p>
+                    </div>
+                    <div class="popular-show-card" data-artist="Tame Impala">
+                        <div class="show-icon">🎹</div>
+                        <h3>Tame Impala</h3>
+                        <p>United Center</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Search Results Section (hidden initially) -->
+            <section class="content-section" id="explore-results-section" style="display: none;">
+                <h2 class="section-title">Search Results</h2>
+                <div id="explore-results" class="concert-grid"></div>
+            </section>
+        </main>
+    </div>
+
+    <script src="/script.js"></script>
+    <script src="/explore.js"></script>
+</body>
+</html>

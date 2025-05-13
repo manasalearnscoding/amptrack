@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amptrack - My Concerts</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <h1 class="logo">AMPTRACK</h1>
+            <nav class="main-nav">
+                <a href="/dashboard.html" class="nav-item">Dashboard</a>
+                <a href="/concerts.html" class="nav-item active">My Concerts</a>
+                <a href="/explore.html" class="nav-item">Explore</a>
+                <a href="/add-concert.html" class="nav-item">Add Concert</a>
+            </nav>
+            <div class="user-profile">
+                <button class="profile-icon" id="profile-button">
+                    <span class="avatar-placeholder"></span>
+                </button>
+                <div class="user-menu" id="user-menu">
+                    <div class="user-info">
+                        <span id="username-display">User</span>
+                    </div>
+                    <div class="theme-toggle">
+                        <span>Theme:</span>
+                        <button id="light-mode" class="theme-btn">Light</button>
+                        <button id="dark-mode" class="theme-btn active">Dark</button>
+                    </div>
+                    <a href="#" id="logout-button" class="menu-item">Log out</a>
+                </div>
+            </div>
+        </header>
+
+        <main class="app-content">
+
+            <section class="content-section" id="search-section">
+                <h2 class="section-title">Find Concerts</h2>
+                <div class="search-box">
+                    <input type="text" id="concert-search" placeholder="Search by artist, venue, or city">
+                    <button id="search-button" class="btn-primary">Search</button>
+                </div>
+            </section>
+
+
+            <section class="content-section" id="your-concerts-section">
+                <h2 class="section-title">Your Concerts</h2>
+                <div id="concert-list" class="concert-grid">
+                    <p>Loading your concerts...</p>
+                </div>
+            </section>
+
+            <section class="content-section" id="results-section" style="display: none;">
+                <h2 class="section-title">Search Results</h2>
+                <div id="concert-results" class="concert-grid"></div>
+            </section>
+        </main>
+    </div>
+
+    <script src="/script.js"></script>
+    <script src="/concerts.js"></script>
+</body>
+</html>
