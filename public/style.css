@@ -402,11 +402,10 @@ label {
   color: var(--primary-color);
 }
 
-/* Stats Section */
 .stats-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 20px;
+  gap: 150px;
 }
 
 .stat-card {
@@ -438,7 +437,7 @@ label {
 .quick-actions {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 20px;
+  gap: 150px;
 }
 
 .action-card {
@@ -584,26 +583,6 @@ label {
   box-shadow: var(--card-shadow);
   transition: all 0.2s;
   cursor: pointer;
-}
-
-.popular-show-card:hover {
-  transform: translateY(-5px);
-  background-color: var(--card-hover-bg);
-}
-
-.show-icon {
-  font-size: 32px;
-  margin-bottom: 10px;
-}
-
-.popular-show-card h3 {
-  font-size: 18px;
-  margin-bottom: 5px;
-}
-
-.popular-show-card p {
-  font-size: 14px;
-  color: var(--text-secondary);
 }
 
 /* Add Concert Form */

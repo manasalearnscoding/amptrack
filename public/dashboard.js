@@ -51,13 +51,6 @@ function setupEventListeners() {
     
     // Theme switching
     initThemeSwitch();
-    
-    // Friends feature coming soon alert
-    const friendsAction = document.getElementById('friends-action');
-    friendsAction.addEventListener('click', function(e) {
-        e.preventDefault();
-        alert('Friends feature coming soon!');
-    });
 }
 
 // Load user activity and update stats

@@ -11,10 +11,6 @@ const authRoutes = require('./routes/auth');
 const app = express();
 const PORT = 3000;
 
-<<<<<<< HEAD
-
-=======
->>>>>>> d7e9e47ebc17037b945b887414bb2415af8ed91b
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -28,10 +24,6 @@ app.use(session({
 app.use('/concerts', concertRoutes);
 app.use('/auth', authRoutes);
 
-<<<<<<< HEAD
-
-=======
->>>>>>> d7e9e47ebc17037b945b887414bb2415af8ed91b
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/index.html'));
 });

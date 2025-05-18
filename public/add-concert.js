@@ -1,15 +1,17 @@
 document.addEventListener('DOMContentLoaded', async function() {
-    initAddConcertPage();
+    addConcertFunc();
 });
 
-async function initAddConcertPage() {
+async function addConcertFunc() {
     try {
-        // Check login
+
         const res = await fetch('/auth/check');
         const data = await res.json();
 
         if (!data.loggedIn) {
-            window.location.href = '/?error=' + encodeURIComponent("You are not logged in. Please log in first.");
+            const errorMessage = "You are not logged in. Please log in first.";
+            const encodedMessage = encodeURIComponent(errorMessage);
+            window.location.href = '/?error=' + encodedMessage;
             return;
         }
 
@@ -98,8 +100,7 @@ async function handleFormSubmit(event) {
         const result = await response.json();
         console.log('Concert added result:', result);
         alert('Concert added successfully!');
-        
-        // Redirect to concerts page
+
         window.location.href = '/concerts.html';
         
     } catch (error) {
