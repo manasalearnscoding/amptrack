@@ -1,3 +1,4 @@
+//DONE
 const express = require('express');
 const router = express.Router();
 const Concert = require('../models/Concert'); 
@@ -82,5 +83,32 @@ router.post('/delete', async (req, res) => {
     res.status(500).json({ error: 'failed to delete concert', details: err.message });
   }
 });
+
+router.get('/search', async (req, res) => {
+  try {
+    const keyword = req.query.keyword;
+    
+    if (!keyword) {
+      return res.status(400).json({ error: 'Keyword is required' });
+    }
+    
+    const apiKey = process.env.TM_API_KEY;
+    
+    const response = await fetch(`https://app.ticketmaster.com/discovery/v2/events.json?size=10&keyword=${encodeURIComponent(keyword)}&apikey=${apiKey}`);
+    
+    if (!response.ok) {
+      throw new Error(`Ticketmaster API error: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    
+    res.json(data);
+    
+  } catch (error) {
+    // console.error('Error searching Ticketmaster API:', error);
+    res.status(500).json({ error: 'Failed to fetch concert data' });
+  }
+});
+
 
 module.exports = router;

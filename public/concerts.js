@@ -1,3 +1,4 @@
+// I THINK DONE
 document.addEventListener('DOMContentLoaded', async function() {
     initConcertsPage();
 });
@@ -31,17 +32,19 @@ function setupEventListeners() {
     const profileButton = document.getElementById('profile-button');
     profileButton.addEventListener('click', function() {
         const menu = document.getElementById('user-menu');
-        menu.classList.toggle('active');
+        if (menu.className === 'user-menu') {
+            menu.className = 'user-menu active';
+        } else {
+            menu.className = 'user-menu';
+        }
     });
     
     const logoutButton = document.getElementById('logout-button');
     logoutButton.addEventListener('click', function(e) {
-        e.preventDefault();
         logout();
     });
     
-    const searchButton = document.getElementById('search-button');
-    searchButton.addEventListener('click', searchConcerts);
+    document.getElementById('search-button').addEventListener('click', searchConcerts);
 }
 
 async function loadUserConcerts() {
@@ -52,16 +55,14 @@ async function loadUserConcerts() {
             return;
         }
 
-        console.log('Loading concerts for user:', username);
-
         const response = await fetch(`/concerts/mine?username=${encodeURIComponent(username)}`);
 
         if (!response.ok) {
-            throw new Error(`Error fetching concerts: ${response.status}`);
+            console.log(`Error fetching concerts: ${response.status}`);
         }
 
         const concerts = await response.json();
-        console.log('Loaded concerts:', concerts);
+        // console.log('Loaded concerts:', concerts);
 
         const concertListDiv = document.getElementById('concert-list');
         concertListDiv.innerHTML = '';
@@ -93,12 +94,9 @@ async function loadUserConcerts() {
                 const concertItem = document.createElement('div');
                 concertItem.classList.add('concert-item');
                 
-                const randomHue = (concert.name.charCodeAt(0) * 7) % 360;
-                const randomColor = `hsl(${randomHue}, 40%, 20%)`;
-                
                 concertItem.innerHTML = `
                     <div class="concert-header">
-                        <div class="concert-image" style="background-color: ${randomColor};">
+                        <div class="concert-image">
                             ${concert.name.substring(0, 2).toUpperCase()}
                         </div>
                         <h3 class="concert-name">${concert.name}</h3>
@@ -134,7 +132,6 @@ async function loadUserConcerts() {
     }
 }
 
-// Delete concert
 async function deleteConcert(concertId) {
     try {
         if (!confirm('Are you sure you want to delete this concert?')) return;
@@ -154,18 +151,17 @@ async function deleteConcert(concertId) {
         });
 
         if (!response.ok) {
-            throw new Error(`Error deleting concert: ${response.status}`);
+            console.log(`Error deleting concert: ${response.status}`);
         }
 
         alert('Concert deleted successfully!');
         loadUserConcerts();
     } catch (error) {
-        console.error('Error deleting concert:', error);
+        // console.error('Error deleting concert:', error);
         alert('Failed to delete concert. Please try again.');
     }
 }
 
-// Function to search for concerts using the Ticketmaster API
 async function searchConcerts() {
     const searchQuery = document.getElementById('concert-search').value;
     if (!searchQuery) {
@@ -180,18 +176,16 @@ async function searchConcerts() {
     resultsDiv.innerHTML = '<p>Searching for concerts...</p>';
 
     try {
-        const apikey = 'BgK2HR1cbLZENtALUAakJ3mtrGJCGhNf';
-        const response = await fetch(`https://app.ticketmaster.com/discovery/v2/events.json?size=10&keyword=${encodeURIComponent(searchQuery)}&apikey=${apikey}`);
+        const response = await fetch(`/concerts/search?keyword=${encodeURIComponent(searchQuery)}`);
         const data = await response.json();
 
         displayConcertResults(data);
     } catch (error) {
-        console.error('Error fetching concerts:', error);
+        // console.error('Error fetching concerts:', error);
         resultsDiv.innerHTML = '<p>Error fetching concert data. Please try again.</p>';
     }
 }
 
-// Function to display concert results
 function displayConcertResults(data) {
     const concertResultsDiv = document.getElementById('concert-results');
     concertResultsDiv.innerHTML = '';
@@ -244,7 +238,6 @@ function displayConcertResults(data) {
 
             concertResultsDiv.appendChild(concertCard);
             
-            // Add event listener to the add button
             const addButton = concertCard.querySelector('.add-concert-btn');
             addButton.addEventListener('click', function() {
                 const id = this.getAttribute('data-id');
@@ -260,7 +253,6 @@ function displayConcertResults(data) {
     });
 }
 
-// Add concert
 async function addConcert(id, name, date, venue) {
     try {
         const username = localStorage.getItem('username');
@@ -269,7 +261,6 @@ async function addConcert(id, name, date, venue) {
             return;
         }
 
-        // Use the venue from the Ticketmaster data
         const confirmedVenue = prompt('Enter venue:', venue);
         if (confirmedVenue === null) return;
 
@@ -300,7 +291,7 @@ async function addConcert(id, name, date, venue) {
         });
 
         if (!response.ok) {
-            throw new Error(`Error adding concert: ${response.status}`);
+            console.log(`Error adding concert: ${response.status}`);
         }
 
         const result = await response.json();
@@ -308,13 +299,11 @@ async function addConcert(id, name, date, venue) {
         alert('Concert added successfully!');
         loadUserConcerts();
         
-        // Hide results section
         document.getElementById('results-section').style.display = 'none';
-        // Clear search
         document.getElementById('concert-search').value = '';
         
     } catch (error) {
-        console.error('Error adding concert:', error);
+        // console.error('Error adding concert:', error);
         alert('Failed to add concert. Please try again.');
     }
 }

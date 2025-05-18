@@ -1,3 +1,4 @@
+//DONE
 document.addEventListener('DOMContentLoaded', async function() {
     initDashboard();
 });
@@ -20,7 +21,6 @@ async function initDashboard() {
         }
 
         await loadUserActivity();
-        
         setupEventListeners();
         
     } catch (err) {
@@ -29,23 +29,16 @@ async function initDashboard() {
 }
 
 function setupEventListeners() {
-    const profileButton = document.getElementById('profile-button');
-    profileButton.addEventListener('click', function() {
+    document.getElementById('profile-button').addEventListener('click', function() {
         const menu = document.getElementById('user-menu');
-        // Check if menu has the active class by checking class attribute
-        const hasActiveClass = menu.getAttribute('class').includes('active');
-        
-        // Toggle the active state
-        if (hasActiveClass) {
-            menu.setAttribute('class', 'user-menu'); // Remove active class
+        if (menu.className === 'user-menu') {
+            menu.className = 'user-menu active';
         } else {
-            menu.setAttribute('class', 'user-menu active'); // Add active class
+            menu.className = 'user-menu';
         }
     });
     
-    const logoutButton = document.getElementById('logout-button');
-    logoutButton.addEventListener('click', function(e) {
-        e.preventDefault();
+    document.getElementById('logout-button').addEventListener('click', function(e) {
         logout();
     });
 }
@@ -60,7 +53,7 @@ async function loadUserActivity() {
 
         const response = await fetch(`/concerts/mine?username=${encodeURIComponent(username)}`);
         if (!response.ok) {
-            throw new Error(`Error fetching concerts: ${response.status}`);
+            console.log(`Error fetching concerts: ${response.status}`);
         }
 
         const concerts = await response.json();
@@ -99,11 +92,4 @@ function updateStats(concerts) {
             venueCounts[concert.venue] = (venueCounts[concert.venue] || 0) + 1;
         }
     });
-    
-    let latestArtist = '-';
-    if (sortedConcerts && sortedConcerts.length > 0) {
-        latestArtist = sortedConcerts[0].name || '-';
-    }
-    
-    document.getElementById('latest-artist').textContent = latestArtist;
 }

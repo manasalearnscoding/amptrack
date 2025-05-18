@@ -1,10 +1,10 @@
+//DONE
 document.addEventListener('DOMContentLoaded', async function() {
-    addConcertFunc();
+    addConcert();
 });
 
-async function addConcertFunc() {
+async function addConcert() {
     try {
-
         const res = await fetch('/auth/check');
         const data = await res.json();
 
@@ -35,18 +35,21 @@ function setupEventListeners() {
     const profileButton = document.getElementById('profile-button');
     profileButton.addEventListener('click', function() {
         const menu = document.getElementById('user-menu');
-        menu.classList.toggle('active');
+        if (menu.className === 'user-menu') {
+            menu.className = 'user-menu active';
+        } else {
+            menu.className = 'user-menu';
+        }
     });
     
     const logoutButton = document.getElementById('logout-button');
     logoutButton.addEventListener('click', function(e) {
-        e.preventDefault();
         logout();
     });
         
-    const addConcertForm = document.getElementById('add-concert-form');
-    if (addConcertForm) {
-        addConcertForm.addEventListener('submit', handleFormSubmit);
+    const addConcert = document.getElementById('add-concert-form');
+    if (addConcert) {
+        addConcert.addEventListener('submit', handleFormSubmit);
     }
 }
 
@@ -70,8 +73,6 @@ async function handleFormSubmit(event) {
             review: document.getElementById('concert-review').value
         };
 
-        console.log('Adding concert:', concertData);
-
         const response = await fetch('/concerts/add', {
             method: 'POST',
             headers: {
@@ -81,17 +82,17 @@ async function handleFormSubmit(event) {
         });
 
         if (!response.ok) {
-            throw new Error(`Error adding concert: ${response.status}`);
+            console.log(`Error adding concert: ${response.status}`);
         }
 
         const result = await response.json();
-        console.log('Concert added result:', result);
+        // console.log('Concert added result:', result);
         alert('Concert added successfully!');
 
         window.location.href = '/concerts.html';
         
     } catch (error) {
-        console.error('Error adding concert:', error);
+        // console.error('Error adding concert:', error);
         alert('Failed to add concert. Please try again.');
     }
 }

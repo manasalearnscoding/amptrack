@@ -21,7 +21,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-family: 'Libre Baskerville', Georgia, 'Times New Roman', Times, serif;
 }
 
 body {
@@ -388,7 +388,7 @@ label {
 .quick-actions {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 150px;
+  gap: 500px;
 }
 
 .action-card {
@@ -567,7 +567,6 @@ label {
   min-width: 180px;
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
   .app-header {
     flex-direction: column;
