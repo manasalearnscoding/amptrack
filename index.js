@@ -11,7 +11,7 @@ const authRoutes = require('./routes/auth');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// --- Middleware ---
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -25,11 +25,10 @@ app.use(session({
   }
 }));
 
-// --- Routes ---
 app.use('/concerts', concertRoutes);
 app.use('/auth', authRoutes);
 
-// Home route - Serve index.html for login/register
+
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/index.html'));
 });
