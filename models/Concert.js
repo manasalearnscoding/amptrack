@@ -5,7 +5,7 @@ const concertSchema = new mongoose.Schema({
   ticketmasterId: String,
   name: String,
   date: String,
-  section: String,
+  venue: String,
   price: Number,
   review: String
 });
