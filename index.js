@@ -36,10 +36,6 @@ app.get('/concerts.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/concerts.html'));
 });
 
-app.get('/explore.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public/explore.html'));
-});
-
 app.get('/add-concert.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/add-concert.html'));
 });

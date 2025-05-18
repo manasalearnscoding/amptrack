@@ -1,30 +1,27 @@
-
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
-require('../db'); // Ensures DB connection
 
 router.post('/register', async (req, res) => {
   try {
     const { username, password } = req.body;
     
     if (!username || !password) {
-      return res.redirect('/?error=' + encodeURIComponent('Username and password are required'));
+      return res.redirect('/?error=' + encodeURIComponent('username and password required'));
     }
 
     const existingUser = await User.findOne({ username });
     if (existingUser) {
-      return res.redirect('/?error=' + encodeURIComponent('Username already exists'));
+      return res.redirect('/?error=' + encodeURIComponent('username already exists'));
     }
 
     const user = new User({ username, password });
     await user.save();
 
     req.session.userId = user._id;
-    return res.redirect('/dashboard.html?success=' + encodeURIComponent('Registration successful! Welcome to Amptrack.'));
+    return res.redirect('/dashboard.html');
   } catch (err) {
-    console.error('Registration error:', err);
-    return res.redirect('/?error=' + encodeURIComponent('Registration failed. Please try again.'));
+    return res.redirect('/?error=' + encodeURIComponent('registration failed'));
   }
 });
 
@@ -33,32 +30,28 @@ router.post('/login', async (req, res) => {
     const { username, password } = req.body;
 
     if (!username || !password) {
-      return res.redirect('/?error=' + encodeURIComponent('Username and password are required'));
+      return res.redirect('/?error=' + encodeURIComponent('username and password are required'));
     }
 
     const user = await User.findOne({ username, password });
     if (!user) {
-      return res.redirect('/?error=' + encodeURIComponent('Invalid username or password'));
+      return res.redirect('/?error=' + encodeURIComponent('invalid username or password'));
     }
 
     req.session.userId = user._id;
-    return res.redirect('/dashboard.html?success=' + encodeURIComponent('Login successful! Welcome back.'));
+    return res.redirect('/dashboard.html');
   } catch (err) {
-    console.error('Login error:', err);
-    return res.redirect('/?error=' + encodeURIComponent('Login failed. Please try again.'));
+    return res.redirect('/?error=' + encodeURIComponent('login failed'));
   }
 });
 
 router.get('/logout', (req, res) => {
   try {
-    // Destroy the session
     if (req.session) {
       req.session.destroy();
     }
-    // Return a success response
     return res.json({ success: true, message: 'Logged out successfully' });
   } catch (err) {
-    console.error('Logout error:', err);
     return res.status(500).json({ success: false, error: 'Logout failed' });
   }
 });
@@ -76,7 +69,6 @@ router.get('/check', async (req, res) => {
         username: user.username 
       });
     } catch (err) {
-      console.error('Error fetching user for /check:', err);
       return res.status(500).json({ loggedIn: false, error: 'Server error' });
     }
   } else {

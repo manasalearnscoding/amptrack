@@ -9,60 +9,47 @@ async function addConcertFunc() {
         const data = await res.json();
 
         if (!data.loggedIn) {
-            const errorMessage = "You are not logged in. Please log in first.";
-            const encodedMessage = encodeURIComponent(errorMessage);
-            window.location.href = '/?error=' + encodedMessage;
+            window.location.href = '/?error=' + encodeURIComponent("please log in first");
             return;
         }
 
-        // Store username
         localStorage.setItem('username', data.username);
         
-        // Update username display
         const usernameDisplay = document.getElementById('username-display');
         if (usernameDisplay) {
             usernameDisplay.textContent = data.username;
         }
 
-        // Set today as the default date
         const today = new Date().toISOString().split('T')[0];
         document.getElementById('concert-date').value = today;
         
-        // Setup event listeners
         setupEventListeners();
         
     } catch (err) {
-        console.error('Error checking login:', err);
-        window.location.href = '/?error=' + encodeURIComponent("Failed to verify login status.");
+        window.location.href = '/?error=' + encodeURIComponent("could not verify login");
     }
 }
 
 function setupEventListeners() {
-    // Profile menu toggle
+
     const profileButton = document.getElementById('profile-button');
     profileButton.addEventListener('click', function() {
         const menu = document.getElementById('user-menu');
         menu.classList.toggle('active');
     });
     
-    // Logout button
     const logoutButton = document.getElementById('logout-button');
     logoutButton.addEventListener('click', function(e) {
         e.preventDefault();
         logout();
     });
-    
-    // Theme switching
-    initThemeSwitch();
-    
-    // Add concert form submission
+        
     const addConcertForm = document.getElementById('add-concert-form');
     if (addConcertForm) {
         addConcertForm.addEventListener('submit', handleFormSubmit);
     }
 }
 
-// Handle form submission
 async function handleFormSubmit(event) {
     event.preventDefault();
 

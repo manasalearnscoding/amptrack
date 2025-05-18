@@ -16,15 +16,10 @@ function initLoginPage() {
     if (errorMsg) {
         messageElement.classList.add('error');
         messageElement.textContent = decodeURIComponent(errorMsg);
-        messageElement.style.display = 'block';
     } else if (successMsg) {
         messageElement.classList.add('success');
         messageElement.textContent = decodeURIComponent(successMsg);
-        messageElement.style.display = 'block';
     }
-    
-    loginForm.style.display = 'block';
-    registerForm.style.display = 'none';
     
     showRegister.addEventListener('click', function(e) {
         e.preventDefault();
@@ -35,8 +30,6 @@ function initLoginPage() {
     
     showLogin.addEventListener('click', function(e) {
         e.preventDefault();
-        registerForm.style.display = 'none';
-        loginForm.style.display = 'block';
         document.title = 'Amptrack - Login';
     });
 

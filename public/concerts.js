@@ -4,60 +4,46 @@ document.addEventListener('DOMContentLoaded', async function() {
 
 async function initConcertsPage() {
     try {
-        // Check login
         const res = await fetch('/auth/check');
         const data = await res.json();
 
         if (!data.loggedIn) {
-            window.location.href = '/?error=' + encodeURIComponent("You are not logged in. Please log in first.");
+            window.location.href = '/?error=' + encodeURIComponent("please log in first");
             return;
         }
 
-        // Store username
         localStorage.setItem('username', data.username);
         
-        // Update username display
         const usernameDisplay = document.getElementById('username-display');
         if (usernameDisplay) {
             usernameDisplay.textContent = data.username;
         }
 
-        // Load user concerts
-        loadUserConcerts();
-        
-        // Setup event listeners
+        loadUserConcerts();        
         setupEventListeners();
         
     } catch (err) {
-        console.error('Error checking login:', err);
-        window.location.href = '/?error=' + encodeURIComponent("Failed to verify login status.");
+        window.location.href = '/?error=' + encodeURIComponent("could not verify login");
     }
 }
 
 function setupEventListeners() {
-    // Profile menu toggle
     const profileButton = document.getElementById('profile-button');
     profileButton.addEventListener('click', function() {
         const menu = document.getElementById('user-menu');
         menu.classList.toggle('active');
     });
     
-    // Logout button
     const logoutButton = document.getElementById('logout-button');
     logoutButton.addEventListener('click', function(e) {
         e.preventDefault();
         logout();
     });
     
-    // Theme switching
-    initThemeSwitch();
-    
-    // Search button
     const searchButton = document.getElementById('search-button');
     searchButton.addEventListener('click', searchConcerts);
 }
 
-// Load concerts for the logged-in user
 async function loadUserConcerts() {
     try {
         const username = localStorage.getItem('username');
@@ -85,7 +71,6 @@ async function loadUserConcerts() {
             return;
         }
 
-        // Sort concerts by date (newest first)
         const sortedConcerts = [...concerts].sort((a, b) => {
             try {
                 return new Date(b.date) - new Date(a.date);
@@ -108,7 +93,6 @@ async function loadUserConcerts() {
                 const concertItem = document.createElement('div');
                 concertItem.classList.add('concert-item');
                 
-                // Create a deterministic color for the concert image background
                 const randomHue = (concert.name.charCodeAt(0) * 7) % 360;
                 const randomColor = `hsl(${randomHue}, 40%, 20%)`;
                 
@@ -134,7 +118,6 @@ async function loadUserConcerts() {
                 `;
                 concertListDiv.appendChild(concertItem);
                 
-                // Add event listener to delete button
                 const deleteButton = concertItem.querySelector('.btn-delete');
                 deleteButton.addEventListener('click', function() {
                     deleteConcert(this.getAttribute('data-id'));
