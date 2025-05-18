@@ -9,62 +9,59 @@ const concertRoutes = require('./routes/concerts');
 const authRoutes = require('./routes/auth');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = 3000;
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> d7e9e47ebc17037b945b887414bb2415af8ed91b
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(session({
-  secret: process.env.SESSION_SECRET || 'amptrack-session-secret',
+  secret: 'amptrack-session-secret',
   resave: false,
-  saveUninitialized: false,
-  cookie: { 
-    maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
-  }
+  saveUninitialized: false
 }));
 
 app.use('/concerts', concertRoutes);
 app.use('/auth', authRoutes);
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> d7e9e47ebc17037b945b887414bb2415af8ed91b
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/index.html'));
 });
 
-// Dashboard route
 app.get('/dashboard.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/dashboard.html'));
 });
 
-// Concerts page route
 app.get('/concerts.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/concerts.html'));
 });
 
-// Explore page route
 app.get('/explore.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/explore.html'));
 });
 
-// Add Concert page route
 app.get('/add-concert.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/add-concert.html'));
 });
 
-// Old profile route - redirect to dashboard
 app.get('/profile.html', (req, res) => {
   res.redirect('/dashboard.html');
 });
 
-// --- MongoDB Connection ---
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 }).then(() => {
-  console.log('✅ MongoDB connected successfully');
-  app.listen(PORT, () => console.log(`🚀 Server running at http://localhost:${PORT}`));
+  console.log('MongoDB connected successfully');
+  app.listen(PORT, () => console.log(`Server running at http://localhost:${PORT}`));
 }).catch(err => {
-  console.error('❌ MongoDB connection error:', err);
+  console.error('MongoDB connection error:', err);
 });

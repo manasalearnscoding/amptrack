@@ -4,7 +4,6 @@ const Concert = require('../models/Concert');
 const User = require('../models/User'); 
 const { ObjectId } = require('mongodb');
 
-// Add a concert
 router.post('/add', async (req, res) => {
   try {
     console.log('Received concert data:', req.body);
@@ -43,7 +42,6 @@ router.post('/add', async (req, res) => {
   }
 });
 
-// Get user's concerts
 router.get('/mine', async (req, res) => {
   try {
     const { username } = req.query;
@@ -70,7 +68,6 @@ router.get('/mine', async (req, res) => {
   }
 });
 
-// Delete a concert
 router.post('/delete', async (req, res) => {
   try {
     const { username, concertId } = req.body;
