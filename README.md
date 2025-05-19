@@ -12,4 +12,4 @@ APIs: Ticketmaster Discovery API - (https://developer.ticketmaster.com/products-
 
 Contact Email: avishig5@terpmail.umd.edu and mvinodku@terpmail.umd.edu
 
-Deployed App Link: [Your Deployed App Link]
+Deployed App Link: [Your Deployed App Link] 
