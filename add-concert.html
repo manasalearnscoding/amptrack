@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amptrack - Add Concert</title>
+    <link rel="stylesheet" href="/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <h1 class="logo">AMPTRACK</h1>
+            <nav class="main-nav">
+                <a href="/dashboard.html" class="nav-item">Dashboard</a>
+                <a href="/concerts.html" class="nav-item">My Concerts</a>
+                <a href="/add-concert.html" class="nav-item active">Add Concert</a>
+            </nav>
+            <div class="user-profile">
+                <button class="profile-icon" id="profile-button">
+                    <span class="avatar-placeholder"></span>
+                </button>
+                <div class="user-menu" id="user-menu">
+                    <div class="user-info">
+                        <span id="username-display">User</span>
+                    </div>
+                    <a href="#" id="logout-button" class="menu-item">Log out</a>
+                </div>
+            </div>
+        </header>
+
+        <main class="app-content">
+            <section class="content-section">
+                <h2 class="section-title">Add a Concert Manually</h2>
+                <div class="add-concert-container">
+                    <form id="add-concert-form" class="add-concert-form">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="concert-name">Concert Name:</label>
+                                <input type="text" id="concert-name" placeholder="Artist or event name" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="concert-date">Date:</label>
+                                <input type="date" id="concert-date" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="concert-venue">Venue:</label>
+                                <input type="text" id="concert-venue" placeholder="Enter venue name" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="concert-price">Price Paid:</label>
+                                <input type="number" id="concert-price" placeholder="0.00">
+                            </div>
+                            
+                            <div class="form-group wide">
+                                <label for="concert-review">Review (optional):</label>
+                                <textarea id="concert-review" placeholder="Share your thoughts about this show"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn-primary save-btn">Save Concert</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script src="/logout.js"></script>
+    <script src="/add-concert.js"></script>
+</body>
+</html>

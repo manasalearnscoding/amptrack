@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville&display=swap" rel="stylesheet">
+  <title>Amptrack - Dashboard</title>
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <h1 class="logo">AMPTRACK</h1>
+            <nav class="main-nav">
+                <a href="/dashboard.html" class="nav-item active">Dashboard</a>
+                <a href="/concerts.html" class="nav-item">My Concerts</a>
+                <a href="/add-concert.html" class="nav-item">Add Concert</a>
+            </nav>
+            <div class="user-profile">
+                <button class="profile-icon" id="profile-button">
+                    <span class="avatar-placeholder"></span>
+                </button>
+                <div class="user-menu" id="user-menu">
+                    <div class="user-info">
+                        <span id="username-display">User</span>
+                    </div>
+                    <a href="#" id="logout-button" class="menu-item">Log out</a>
+                </div>
+            </div>
+        </header>
+
+        <main class="app-content">
+            <section class="content-section" id="stats-section">
+                <h2 class="section-title">Your Concert Stats</h2>
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <div class="stat-value" id="total-concerts">0</div>
+                        <div class="stat-label">Total Concerts</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="year-concerts">0</div>
+                        <div class="stat-label">This Year</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="avg-price">$0</div>
+                        <div class="stat-label">Avg. Price</div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-section" id="quick-actions-section">
+                <h2 class="section-title">Quick Actions</h2>
+                <div class="quick-actions">
+                    <a href="/concerts.html" class="action-card">
+                        <div class="action-icon"></div>
+                        <div class="action-title">My Concerts</div>
+                        <div class="action-description">View and manage all your concerts</div>
+                    </a>
+                    <a href="/add-concert.html" class="action-card">
+                        <div class="action-icon"></div>
+                        <div class="action-title">Add Concert</div>
+                        <div class="action-description">Add a new concert to your collection</div>
+                    </a>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="/logout.js"></script>
+    <script src="/dashboard.js"></script>
+</body>
+</html>
