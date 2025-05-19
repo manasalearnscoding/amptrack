@@ -1,183 +1,70 @@
-// const express = require('express');
-// const router = express.Router();
-// const path = require('path'); 
-// const User = require('../models/User');
-
-// router.post('/register', async (req, res) => {
-//   try {
-//     const { username, password } = req.body;
-    
-//     if (!username || !password) {
-//       return res.redirect('/?error=' + encodeURIComponent('username and password required'));
-//     }
-
-//     const existingUser = await User.findOne({ username });
-//     if (existingUser) {
-//       return res.redirect('/?error=' + encodeURIComponent('username already exists'));
-//     }
-
-//     const user = new User({ username, password });
-//     await user.save();
-
-//     req.session.userId = user._id;
-//     return res.redirect('/dashboard.html');
-//   } catch (err) {
-//     return res.redirect('/?error=' + encodeURIComponent('registration failed'));
-//   }
-// });
-
-// router.post('/login', async (req, res) => {
-//   try {
-//     const { username, password } = req.body;
-
-//     if (!username || !password) {
-//       return res.redirect('/?error=' + encodeURIComponent('username and password are required'));
-//     }
-
-//     const user = await User.findOne({ username, password });
-//     if (!user) {
-//       return res.redirect('/?error=' + encodeURIComponent('invalid username or password'));
-//     }
-
-//     req.session.userId = user._id;
-//     return res.redirect('/dashboard.html');
-//   } catch (err) {
-//     return res.redirect('/?error=' + encodeURIComponent('login failed'));
-//   }
-// });
-
-// router.get('/login', (req, res) => {
-//   res.redirect('/');
-// });
-
-// router.get('/logout', (req, res) => {
-//   try {
-//     if (req.session) {
-//       req.session.destroy();
-//     }
-//     return res.json({ success: true, message: 'Logged out successfully' });
-//   } catch (err) {
-//     return res.status(500).json({ success: false, error: 'Logout failed' });
-//   }
-// });
-
-// router.get('/check', async (req, res) => {
-//   if (req.session && req.session.userId) {
-//     try {
-//       const user = await User.findById(req.session.userId);
-//       if (!user) {
-//         return res.status(404).json({ loggedIn: false, error: 'User not found' });
-//       }
-//       return res.status(200).json({ 
-//         loggedIn: true, 
-//         userId: user._id, 
-//         username: user.username 
-//       });
-//     } catch (err) {
-//       return res.status(500).json({ loggedIn: false, error: 'Server error' });
-//     }
-//   } else {
-//     return res.status(200).json({ loggedIn: false });
-//   }
-// });
-
-// module.exports = router;
-
+//DONE
 const express = require('express');
-const router = express.Router();
-const path = require('path'); 
-const User = require('../models/User');
+const path = require('path');
+const session = require('express-session');
+require('dotenv').config();
+const mongoose = require('mongoose');
 
-router.post('/register', async (req, res) => {
-  try {
-    const { username, password } = req.body;
-    
-    if (!username || !password) {
-      return res.redirect('/?error=' + encodeURIComponent('username and password required'));
-    }
+const concertRoutes = require('./routes/concerts');
+const authRoutes = require('./routes/auth');
 
-    const existingUser = await User.findOne({ username });
-    if (existingUser) {
-      return res.redirect('/?error=' + encodeURIComponent('username already exists'));
-    }
+const app = express();
+const PORT = process.env.PORT || 3000;
 
-    const user = new User({ username, password });
-    await user.save();
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
 
-    req.session.userId = user._id;
-    
-    // Use absolute path for redirect
-    return res.redirect('/dashboard.html');
-  } catch (err) {
-    console.error('Register error:', err);
-    return res.redirect('/?error=' + encodeURIComponent('registration failed'));
-  }
+app.use(session({
+  secret: 'amptrack-session-secret',
+  resave: false,
+  saveUninitialized: false
+}));
+
+app.use('/concerts', concertRoutes);
+app.use('/auth', authRoutes);
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public/index.html'));
 });
 
-router.post('/login', async (req, res) => {
-  try {
-    console.log('Login attempt received:', req.body);
-    
-    const { username, password } = req.body;
-
-    if (!username || !password) {
-      console.log('Missing credentials');
-      return res.redirect('/?error=' + encodeURIComponent('username and password are required'));
-    }
-
-    const user = await User.findOne({ username, password });
-    console.log('User found?', !!user);
-    
-    if (!user) {
-      console.log('Invalid credentials');
-      return res.redirect('/?error=' + encodeURIComponent('invalid username or password'));
-    }
-
-    req.session.userId = user._id;
-    console.log('Session set, redirecting to dashboard');
-    
-    // Use absolute path for redirect and add status code for clarity
-    return res.status(302).redirect('/dashboard.html');
-  } catch (err) {
-    console.error('Login error:', err);
-    return res.redirect('/?error=' + encodeURIComponent('login failed: ' + err.message));
-  }
+app.get('/dashboard', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public/dashboard.html'));
 });
 
-router.get('/login', (req, res) => {
-  // Redirect to root with absolute path
-  return res.redirect('/');
+// Also keep the old route for backward compatibility
+app.get('/dashboard.html', (req, res) => {
+  res.redirect('/dashboard');
 });
 
-router.get('/logout', (req, res) => {
-  try {
-    if (req.session) {
-      req.session.destroy();
-    }
-    return res.json({ success: true, message: 'Logged out successfully' });
-  } catch (err) {
-    return res.status(500).json({ success: false, error: 'Logout failed' });
-  }
+app.get('/concerts', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public/concerts.html'));
 });
 
-router.get('/check', async (req, res) => {
-  if (req.session && req.session.userId) {
-    try {
-      const user = await User.findById(req.session.userId);
-      if (!user) {
-        return res.status(404).json({ loggedIn: false, error: 'User not found' });
-      }
-      return res.status(200).json({ 
-        loggedIn: true, 
-        userId: user._id, 
-        username: user.username 
-      });
-    } catch (err) {
-      return res.status(500).json({ loggedIn: false, error: 'Server error' });
-    }
-  } else {
-    return res.status(200).json({ loggedIn: false });
-  }
+// Also keep the old route for backward compatibility
+app.get('/concerts.html', (req, res) => {
+  res.redirect('/concerts');
 });
 
-module.exports = router;
+app.get('/add-concert', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public/add-concert.html'));
+});
+
+// Also keep the old route for backward compatibility
+app.get('/add-concert.html', (req, res) => {
+  res.redirect('/add-concert');
+});
+
+app.get('/profile.html', (req, res) => {
+  res.redirect('/dashboard.html');
+});
+
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+}).then(() => {
+  console.log('MongoDB connected successfully');
+  app.listen(PORT, () => console.log(Server running at http://localhost:${PORT}));
+}).catch(err => {
+  console.error('MongoDB connection error:', err);
+});
