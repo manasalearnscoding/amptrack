@@ -1,84 +1,55 @@
+//DONE
 const express = require('express');
-const router = express.Router();
-const path = require('path'); 
-const User = require('../models/User');
+const path = require('path');
+const session = require('express-session');
+require('dotenv').config();
+const mongoose = require('mongoose');
 
-router.post('/register', async (req, res) => {
-  try {
-    const { username, password } = req.body;
-    
-    if (!username || !password) {
-      return res.redirect('/?error=' + encodeURIComponent('username and password required'));
-    }
+const concertRoutes = require('./routes/concerts');
+const authRoutes = require('./routes/auth');
 
-    const existingUser = await User.findOne({ username });
-    if (existingUser) {
-      return res.redirect('/?error=' + encodeURIComponent('username already exists'));
-    }
+const app = express();
+const PORT = process.env.PORT || 3000;
 
-    const user = new User({ username, password });
-    await user.save();
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
 
-    req.session.userId = user._id;
-    return res.redirect('/dashboard');
-  } catch (err) {
-    return res.redirect('/?error=' + encodeURIComponent('registration failed'));
-  }
+app.use(session({
+  secret: process.env.SECRET_KEY,
+  resave: false,
+  saveUninitialized: false
+}));
+
+app.use('/concerts', concertRoutes);
+app.use('/auth', authRoutes);
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public/index.html'));
 });
 
-router.post('/login', async (req, res) => {
-  try {
-    const { username, password } = req.body;
-
-    if (!username || !password) {
-      return res.redirect('/?error=' + encodeURIComponent('username and password are required'));
-    }
-
-    const user = await User.findOne({ username, password });
-    if (!user) {
-      return res.redirect('/?error=' + encodeURIComponent('invalid username or password'));
-    }
-
-    req.session.userId = user._id;
-    return res.redirect('/dashboard');
-  } catch (err) {
-    return res.redirect('/?error=' + encodeURIComponent('login failed'));
-  }
+app.get('/dashboard.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public/dashboard.html'));
 });
 
-router.get('/login', (req, res) => {
-  res.redirect('/dashboard');
+app.get('/concerts.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public/concerts.html'));
 });
 
-router.get('/logout', (req, res) => {
-  try {
-    if (req.session) {
-      req.session.destroy();
-    }
-    return res.json({ success: true, message: 'Logged out successfully' });
-  } catch (err) {
-    return res.status(500).json({ success: false, error: 'Logout failed' });
-  }
+app.get('/add-concert.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public/add-concert.html'));
 });
 
-router.get('/check', async (req, res) => {
-  if (req.session && req.session.userId) {
-    try {
-      const user = await User.findById(req.session.userId);
-      if (!user) {
-        return res.status(404).json({ loggedIn: false, error: 'User not found' });
-      }
-      return res.status(200).json({ 
-        loggedIn: true, 
-        userId: user._id, 
-        username: user.username 
-      });
-    } catch (err) {
-      return res.status(500).json({ loggedIn: false, error: 'Server error' });
-    }
-  } else {
-    return res.status(200).json({ loggedIn: false });
-  }
+app.get('/profile.html', (req, res) => {
+  res.redirect('/dashboard.html');
 });
 
-module.exports = router;
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+}).then(() => {
+  console.log('MongoDB connected successfully');
+  app.listen(PORT, () => console.log(`Server running at http://localhost:${PORT}`));
+}).catch(err => {
+  console.error('MongoDB connection error:', err);
+});
