@@ -1,4 +1,4 @@
-// I THINK DONE
+// I THINK DONE - should be working
 document.addEventListener('DOMContentLoaded', async function() {
     initConcertsPage();
 });
