@@ -9,7 +9,7 @@ const concertRoutes = require('./routes/concerts');
 const authRoutes = require('./routes/auth');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT;
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
