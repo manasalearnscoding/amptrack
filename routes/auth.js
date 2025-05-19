@@ -88,6 +88,9 @@ const router = express.Router();
 const path = require('path'); 
 const User = require('../models/User');
 
+console.log('Auth routes loaded');
+
+
 router.post('/register', async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -161,6 +164,7 @@ router.get('/logout', (req, res) => {
 });
 
 router.get('/check', async (req, res) => {
+  console.log('Received GET /auth/check');
   if (req.session && req.session.userId) {
     try {
       const user = await User.findById(req.session.userId);
