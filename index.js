@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(session({
-  secret: 'amptrack-session-secret',
+  secret: process.env.SECRET_KEY,
   resave: false,
   saveUninitialized: false
 }));
