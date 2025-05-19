@@ -1,6 +1,6 @@
-//DONE
 const express = require('express');
 const router = express.Router();
+const path = require('path'); 
 const User = require('../models/User');
 
 router.post('/register', async (req, res) => {
@@ -47,9 +47,8 @@ router.post('/login', async (req, res) => {
 });
 
 router.get('/login', (req, res) => {
-  res.sendFile(path.join(__dirname, '../public/index.html'));
+  res.redirect('/');
 });
-
 
 router.get('/logout', (req, res) => {
   try {

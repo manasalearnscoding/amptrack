@@ -1,4 +1,3 @@
-//DONE
 document.addEventListener('DOMContentLoaded', function() {
     initLoginPage();
 });
@@ -15,14 +14,27 @@ function initLoginPage() {
         } else {
             messageElement.className = 'auth-message';
         }
-        messageElement.textContent = 'login failed';
+        messageElement.textContent = errorMsg; 
     } else if (successMsg) {
         if (messageElement.className === 'auth-message') {
             messageElement.className = 'auth-message success';
         } else {
             messageElement.className = 'auth-message';
         }
-        messageElement.textContent = 'login successful';
+        messageElement.textContent = successMsg; 
+    }
+    
+    // Set up event handlers for form submission
+    const loginForm = document.getElementById('login-form');
+    if (loginForm) {
+        loginForm.addEventListener('submit', function(event) {
+        });
+    }
+    
+    const registerForm = document.getElementById('register-form');
+    if (registerForm) {
+        registerForm.addEventListener('submit', function(event) {
+        });
     }
     
     document.getElementById('show-register').addEventListener('click', function(e) {
@@ -37,8 +49,6 @@ function initLoginPage() {
         document.title = 'Amptrack - Login';
         document.getElementById('register-form-container').style.display = 'none';
         document.getElementById('login-form-container').style.display = 'block';
-        document.title = 'Amptrack - Login';
-
     });
 
     checkLoginStatus();
