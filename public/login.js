@@ -35,6 +35,10 @@ function initLoginPage() {
     document.getElementById('show-login').addEventListener('click', function(e) {
         e.preventDefault();
         document.title = 'Amptrack - Login';
+        document.getElementById('register-form-container').style.display = 'none';
+        document.getElementById('login-form-container').style.display = 'block';
+        document.title = 'Amptrack - Login';
+
     });
 
     checkLoginStatus();

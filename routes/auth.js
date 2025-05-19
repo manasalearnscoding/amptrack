@@ -46,6 +46,11 @@ router.post('/login', async (req, res) => {
   }
 });
 
+router.get('/login', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/index.html'));
+});
+
+
 router.get('/logout', (req, res) => {
   try {
     if (req.session) {
