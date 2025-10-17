@@ -11,5 +11,3 @@ YouTube Video Link: [\[Amptrack demo\]](https://www.youtube.com/watch?v=8-ceU8eg
 APIs: Ticketmaster Discovery API - (https://developer.ticketmaster.com/products-and-docs/apis/discovery-api/v2/)
 
 Contact Email: avishig5@terpmail.umd.edu and mvinodku@terpmail.umd.edu
-
-Deployed App Link: [Your Deployed App Link]
